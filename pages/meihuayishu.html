@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>梅花易數排盤 | 易數閣</title>
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-container">
+      <a href="../index.html" class="nav-brand">← 返回易數閣首頁</a>
+      <span class="nav-meta">先天八卦 · 體用生克</span>
+    </nav>
+  </header>
+
+  <main class="content-container">
+    <section class="tool-panel">
+      <h1>梅花易數雙數起卦</h1>
+      <p class="subtitle">專注所問之事，輸入兩個直覺正整數（分別取上卦與下卦），或點擊「以當前時間起卦」。</p>
+
+      <form id="divination-form" class="form-grid">
+        <div class="form-group">
+          <label for="upperNum">上卦起數（外應）</label>
+          <input type="number" id="upperNum" min="1" value="5" required />
+        </div>
+        <div class="form-group">
+          <label for="lowerNum">下卦起數（內心）</label>
+          <input type="number" id="lowerNum" min="1" value="8" required />
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn-primary">開始排盤</button>
+          <button type="button" id="time-seed-btn" class="btn-secondary">以當前時間起卦</button>
+        </div>
+      </form>
+
+      <div id="result-container" class="result-box hidden"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>易數閣 · Spec-Driven Divination Platform</p>
+  </footer>
+
+  <script type="module">
+    import { calculateMeiHuaYiShu } from "../src/engines/meihuayishu.js";
+
+    const form = document.getElementById("divination-form");
+    const timeBtn = document.getElementById("time-seed-btn");
+    const resultBox = document.getElementById("result-container");
+
+    function renderResult(data) {
+      resultBox.classList.remove("hidden");
+      resultBox.innerHTML = `
+        <div class="result-header">
+          <span class="badge badge-${data.auspiciousness}">${data.auspiciousness}</span>
+          <span class="input-meta">${data.inputSummary}</span>
+        </div>
+        <h2>${data.primaryTitle}</h2>
+        <ul class="detail-list">
+          ${data.details.map(d => `<li><strong>${d.label}：</strong>${d.value}</li>`).join("")}
+        </ul>
+        <p class="interpretation"><strong>斷語解析：</strong>${data.interpretation}</p>
+      `;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const res = calculateMeiHuaYiShu(
+        document.getElementById("upperNum").value,
+        document.getElementById("lowerNum").value
+      );
+      renderResult(res);
+    });
+
+    timeBtn.addEventListener("click", () => {
+      const now = new Date();
+      document.getElementById("upperNum").value = now.getHours() + now.getMinutes() + 1;
+      document.getElementById("lowerNum").value = now.getSeconds() + now.getDate();
+      form.dispatchEvent(new Event("submit"));
+    });
+  </script>
+</body>
+</html>

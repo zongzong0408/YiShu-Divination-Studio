@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>易數閣 | 模組化傳統術數排盤平台</title>
+  <link rel="stylesheet" href="./assets/css/tokens.css" />
+  <link rel="stylesheet" href="./assets/css/layout.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="./index.html" class="nav-brand">☯ 易數閣 YiShu Studio</a>
+      <span class="nav-meta">Spec-Driven Platform</span>
+    </div>
+  </header>
+
+  <main class="content-container">
+    <section class="hero-section">
+      <h1>傳統術數排盤系統</h1>
+      <p class="subtitle">本平台採用演算法引擎與介面解耦架構，所有占卜模組皆依循 <code>AGENTS.md</code> 規範標準化建置與擴充。</p>
+      <div id="tool-grid" class="card-grid">載入術數模組中...</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>易數閣 · Powered by AGENTS.md & GitHub Pages</p>
+  </footer>
+
+  <!-- 協定守衛：若使用者直接雙擊 HTML (file://)，立即給出明確指引而非無限卡在載入中 -->
+  <script>
+    if (window.location.protocol === "file:") {
+      const grid = document.getElementById("tool-grid");
+      if (grid) {
+        grid.innerHTML = `
+          <div class="alert-banner">
+            <strong>⚠️ 偵測到本機檔案協定（file://）</strong><br />
+            瀏覽器基於 CORS 安全機制，會阻擋直接雙擊 HTML 時載入 ES Modules（<code>type="module"</code>）。<br />
+            請在專案資料夾開啟終端機執行 <code>python -m http.server 8080</code>，並改用瀏覽器開啟 <code>http://localhost:8080</code> 即可正常顯示！
+          </div>
+        `;
+      }
+    }
+  </script>
+
+  <script type="module" src="./assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "01",
+    "title": "專案架構與規範導覽",
+    "category": "系統架構",
+    "date": "2026-11-15",
+    "summary": "說明本知識庫如何透過 AGENTS.md 實現模組化擴充。",
+    "path": "./content/pages/01-intro.html"
+  }
+]

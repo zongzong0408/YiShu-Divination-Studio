@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小六壬排盤 | 易數閣</title>
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-container">
+      <a href="../index.html" class="nav-brand">← 返回易數閣首頁</a>
+      <span class="nav-meta">六宮掌訣</span>
+    </nav>
+  </header>
+
+  <main class="content-container">
+    <section class="tool-panel">
+      <h1>小六壬三數起課</h1>
+      <p class="subtitle">心中默念所問之事，輸入三個直覺數字，或點擊「以當前時間起課」。</p>
+
+      <form id="divination-form" class="form-grid">
+        <div class="form-group">
+          <label for="num1">第一數（起）</label>
+          <input type="number" id="num1" min="1" value="3" required />
+        </div>
+        <div class="form-group">
+          <label for="num2">第二數（承）</label>
+          <input type="number" id="num2" min="1" value="7" required />
+        </div>
+        <div class="form-group">
+          <label for="num3">第三數（結）</label>
+          <input type="number" id="num3" min="1" value="11" required />
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn-primary">開始排盤</button>
+          <button type="button" id="time-seed-btn" class="btn-secondary">以當前時間起課</button>
+        </div>
+      </form>
+
+      <div id="result-container" class="result-box hidden"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>易數閣 · Spec-Driven Divination Platform</p>
+  </footer>
+
+  <script type="module">
+    import { calculateXiaoLiuRen } from "../src/engines/xiaoliuren.js";
+
+    const form = document.getElementById("divination-form");
+    const timeBtn = document.getElementById("time-seed-btn");
+    const resultBox = document.getElementById("result-container");
+
+    function renderResult(data) {
+      resultBox.classList.remove("hidden");
+      resultBox.innerHTML = `
+        <div class="result-header">
+          <span class="badge badge-${data.auspiciousness}">${data.auspiciousness}</span>
+          <span class="input-meta">${data.inputSummary}</span>
+        </div>
+        <h2>${data.primaryTitle}</h2>
+        <ul class="detail-list">
+          ${data.details.map(d => `<li><strong>${d.label}：</strong>${d.value}</li>`).join("")}
+        </ul>
+        <p class="interpretation"><strong>斷語解析：</strong>${data.interpretation}</p>
+      `;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const res = calculateXiaoLiuRen(
+        document.getElementById("num1").value,
+        document.getElementById("num2").value,
+        document.getElementById("num3").value
+      );
+      renderResult(res);
+    });
+
+    timeBtn.addEventListener("click", () => {
+      const now = new Date();
+      document.getElementById("num1").value = now.getHours() + 1;
+      document.getElementById("num2").value = now.getMinutes() + 1;
+      document.getElementById("num3").value = now.getSeconds() + 1;
+      form.dispatchEvent(new Event("submit"));
+    });
+  </script>
+</body>
+</html>
